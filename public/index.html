@@ -9,9 +9,16 @@
 
 <body>
     <h1>Chat App</h1>
+    <section>
+        <input type="radio" name="user" value="user1-checkbox">User 1</input>
+        <input type="radio" name="user" value="user2-checkbox">User 2</input>
+    </section>
+
+    <br><br>
 
     <input id="message" placeholder="Type your message here..."></input>
     <button id="sendBtn">Send</button>
+    <div id="messages"></div>
 
 
     <script src="/socket.io/socket.io.js"></script>
@@ -19,7 +26,43 @@
         const socket = io();
         const sendBtn = document.getElementById('sendBtn');
         const messageInput = document.getElementById('message');
-        
+        const allMessages = document.getElementById('messages')
+
+                socket.on('user1-text', (message) => {
+                    const p = document.createElement('p');
+                    p.textContent = "User 1:" + message;
+                    allMessages.appendChild(p);
+
+                })
+
+                socket.on('user2-text', (message) => {
+                    const p = document.createElement('p');
+                    p.textContent = "User 2:" + message;
+                    allMessages.appendChild(p);
+                })
+            
+
+
+        sendBtn.addEventListener('click', () => {
+            const selectedUser = document.querySelector('input[name="user"]:checked');
+            if (!selectedUser) {
+                alert("Please select a user before sending a message.");
+                return;
+            }
+
+            const message = messageInput.value;
+            if (message.trim() === "") return;
+
+            if (selectedUser.value === "user1-checkbox") {
+                socket.emit('user1-text', message);
+            }
+            if (selectedUser.value === "user2-checkbox") {
+                socket.emit('user2-text', message);
+            }
+
+            messageInput.value = '';
+
+        });
     </script>
 
 </body>

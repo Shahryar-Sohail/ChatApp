@@ -19,6 +19,11 @@ server.listen(9000 , ()=> console.log("Server is running on port 9000"));
 //Socket.Io
 
 io.on("connection", (socket) => {
-    console.log("A New user connected ", socket.id);
-    
+    socket.on('user1-text', (message) => {
+        io.emit('user1-text', message);
+    });
+
+    socket.on('user2-text', (message) => {
+        io.emit('user2-text', message);
+    });
 });
